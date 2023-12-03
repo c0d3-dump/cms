@@ -4,8 +4,13 @@ import Members from "./components/local/members";
 import Books from "./components/local/books";
 import Genres from "./components/local/genres";
 import Authors from "./components/local/authors";
+import { useAuth0 } from "@auth0/auth0-react";
+import { Button } from "./components/ui/button";
+import { Toaster } from "./components/ui/toaster";
 
 function App() {
+  const { isAuthenticated, loginWithRedirect } = useAuth0();
+
   const router = createBrowserRouter([
     {
       path: "/",
@@ -31,9 +36,18 @@ function App() {
 
   return (
     <>
-      <div className="container">
-        <RouterProvider router={router}></RouterProvider>
-      </div>
+      {!isAuthenticated ? (
+        <Button variant="link" onClick={() => loginWithRedirect()}>
+          Login
+        </Button>
+      ) : (
+        <>
+          <div className="container">
+            <RouterProvider router={router}></RouterProvider>
+          </div>
+          <Toaster></Toaster>
+        </>
+      )}
     </>
   );
 }
